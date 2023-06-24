@@ -6,7 +6,6 @@
 
 int main(int argc, char const *argv[])
 {
-    printf("test");
-    /* code */
+    printf("test\n");
     return 0;
 }
