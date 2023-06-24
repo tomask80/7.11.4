@@ -7,6 +7,6 @@
 /* TODO think twice*/
 int main(int argc, char const *argv[])
 {
-    printf("test me\n");
+    printf("test me \n");
     return 0;
 }
