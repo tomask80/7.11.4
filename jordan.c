@@ -5,6 +5,8 @@
 #include <stdbool.h>
 #include <math.h>
 
+#define POKAZIL_SA_ALLOC 2
+
 #define DEF_XY(sx, sy, i, x, y) \
     sx[i] = x;                  \
     sy[i] = y;
@@ -23,9 +25,13 @@ typedef struct
     POINT end;
 } SEGMENT;
 
+
 SEGMENT *createSEGMENT(float x1, float y1, float x2, float y2)
 {
     SEGMENT *s = malloc(sizeof(SEGMENT));
+      if(s == NULL) {
+        return POKAZIL_SA_ALLOC;
+    }
     s->beg.x = x1;
     s->beg.y = y1;
     s->end.x = x2;
@@ -106,7 +112,6 @@ void svg_chvost(char *filename)
 
 void createSvg(float *x, float *y, unsigned int l,char *filename)
 {
-    printf("Vytvaram SVG HTML subor s vizualizaciou...\n");
     svg_hlavicka(FACTOR + 1, FACTOR + 1,filename);
     for (int i = 0; i < l-1; i++)
     {
@@ -135,7 +140,6 @@ double vypocitajUholSegmentov(SEGMENT *segmentA, SEGMENT *segmentB)
     double clockAngleADgs = arcVektoraA * 180 / M_PI;
     double clockAngleBDgs = arcVektoraB * 180 / M_PI;
 
-    printf("atan2 uhol segmentov A=%f, B=%f. ", clockAngleADgs, clockAngleBDgs);
     // dlzka B vektora
     double rB = sqrt(pow(vektorBx, 2) + pow(vektorBy, 2));
 
@@ -152,6 +156,9 @@ unsigned int pocitaj_orientaciu(float *x, float *y, unsigned int l)
 {
     float counter = 0;
     SEGMENT **segmenty = malloc(l * sizeof(SEGMENT *));
+      if(segmenty == NULL) {
+        return POKAZIL_SA_ALLOC;
+    }
     // init segmentov
     for (int i = 0; i < l; i++)
     {
@@ -171,14 +178,11 @@ unsigned int pocitaj_orientaciu(float *x, float *y, unsigned int l)
     for (int i = 0; i < l-1; i++)
     {
         double angleDgs = vypocitajUholSegmentov(segmenty[i], segmenty[i + 1]);
-        printf("odchylka vektorov segmentov %d,%d je %f\n", i, i + 1, angleDgs);
         sumDeltaAngles += angleDgs;
     }
     double angleDgs = vypocitajUholSegmentov(segmenty[l-1], segmenty[0]);
-    printf("odchylka vektorov segmentov %d,%d je %f\n", l, 0, angleDgs);
     sumDeltaAngles += angleDgs;
 
-    printf("suma delt uholov medzi segmentami je %f\n", sumDeltaAngles);
 
     if (sumDeltaAngles>0) {
         printf("Identifikovalo sa lavotocive prechadzanie.\n");
