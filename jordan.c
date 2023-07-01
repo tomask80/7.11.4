@@ -6,6 +6,8 @@
 #include <math.h>
 
 #define POKAZIL_SA_ALLOC 2
+#define PRAVOTOCIVY 3
+#define LAVOTOCIVY 4
 
 #define DEF_XY(sx, sy, i, x, y) \
     sx[i] = x;                  \
@@ -36,6 +38,7 @@ SEGMENT *createSEGMENT(float x1, float y1, float x2, float y2)
     s->beg.y = y1;
     s->end.x = x2;
     s->end.y = y2;
+    return s;
 }
 
 void destroySEGMENT(SEGMENT *s)
@@ -185,9 +188,9 @@ unsigned int pocitaj_orientaciu(float *x, float *y, unsigned int l)
 
 
     if (sumDeltaAngles>0) {
-        printf("Identifikovalo sa lavotocive prechadzanie.\n");
+        return LAVOTOCIVY;
     } else {
-        printf("Identifikovalo sa pravotovcive prechadzanie.\n");
+        return PRAVOTOCIVY;
     }
 
 
@@ -195,7 +198,7 @@ unsigned int pocitaj_orientaciu(float *x, float *y, unsigned int l)
     destroySEGMENTOV(segmenty, l);
 }
 
-void napchajStvorec()
+unsigned int napchajStvorec()
 {
     float setX[4];
     float setY[4];
@@ -209,10 +212,10 @@ void napchajStvorec()
     //  vizualizacia cez SVG
     createSvg(setX, setY, 4, "stvorec.html");
 
-    pocitaj_orientaciu(setX, setY, 4);
+    return pocitaj_orientaciu(setX, setY, 4);
 }
 
-void napchajStvorecOpacne()
+unsigned int napchajStvorecOpacne()
 {
     float setX[4];
     float setY[4];
@@ -225,10 +228,10 @@ void napchajStvorecOpacne()
 
     //  vizualizacia cez SVG
     createSvg(setX,setY, 4, "stvorec-opacne.html");
-    pocitaj_orientaciu(setX, setY, 4);
+    return pocitaj_orientaciu(setX, setY, 4);
 }
 
-void krivka()
+unsigned int krivka()
 {
     float setX[8];
     float setY[8];
@@ -246,12 +249,33 @@ void krivka()
     //  vizualizacia cez SVG
     createSvg(setX, setY, 8, "krivka.html");
 
-    pocitaj_orientaciu(setX, setY, 8);
+    return pocitaj_orientaciu(setX, setY, 8);
 }
 
 int main(void)
 {
-   napchajStvorec();
-   napchajStvorecOpacne();
-   krivka();
+   if(napchajStvorec()==3)
+   {
+    printf("pravotociva krivka\n");
+   }
+   else{
+    printf("lavotociva krivka\n");
+   }
+
+    if(napchajStvorecOpacne()==3)
+   {
+    printf("pravotociva krivka\n");
+   }
+   else{
+    printf("lavotociva krivka\n");
+   }
+
+   if(krivka()==3)
+   {
+    printf("pravotociva krivka\n");
+   }
+   else{
+    printf("lavotociva krivka\n");
+   }
+   
 }
